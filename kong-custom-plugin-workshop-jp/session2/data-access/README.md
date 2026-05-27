@@ -1,0 +1,4 @@
+## Problem Statement
+
+Kongデータベースに問い合わせるシンプルなプラグインを作成します。
+KongデータベースからKongのServiceとRouteを取得し、APIレスポンスで返すようにプラグインテンプレートを更新します。

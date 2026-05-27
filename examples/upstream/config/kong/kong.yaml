@@ -1,0 +1,19 @@
+_format_version: "3.0"
+
+services:
+  - name: httpbin-service
+    host: httpbin-upstream
+    routes:
+      - name: httpbin-route
+        paths:
+          - /mock
+        strip_path: true
+
+upstreams:
+  - name: httpbin-upstream
+    algorithm: round-robin
+    targets:
+      - target: httpbin.org:80
+        weight: 100
+      - target: httpbun.org:80
+        weight: 100

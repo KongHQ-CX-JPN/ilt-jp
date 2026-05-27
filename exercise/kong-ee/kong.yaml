@@ -1,0 +1,66 @@
+_format_version: "3.0"
+
+# Consumer定義
+consumers:
+  - username: admin@example.com
+    # Key Authプラグインの認証で利用するキーを定義
+    keyauth_credentials:
+      - key: admin-key
+    # ACL(Access Control List)で利用するグループ情報を定義
+    acls:
+      - group: admin
+  - username: viewer@example.com
+    # Key Authプラグインの認証で利用するキーを定義
+    keyauth_credentials:
+      - key: viewer-key
+    # ACL(Access Control List)で利用するグループ情報を定義
+    acls:
+      - group: viewer
+
+# Service定義
+services:
+  - name: httpbin-service
+    url: https://httpbin.org
+    # Request Headerの有無で振る舞いを変えるためにRouteを複数定義
+    routes:
+      - name: httpbin-route
+        paths:
+          - /mock
+        strip_path: true
+      - name: httpbin-route-non-terminate
+        paths:
+          - /mock
+        # "user: b3db2b36aa26"がついたリクエストはこちらのRouteで評価される
+        headers:
+          user:
+            - "b3db2b36aa26"
+        strip_path: true
+
+# プラグイン定義
+plugins:
+  - name: key-auth
+    service: httpbin-service
+  # - name: rate-limiting-advanced
+  #   consumer: admin@example.com
+  #   config:
+  #     limit:
+  #       - 10
+  #     window_size:
+  #       - 60
+  # - name: rate-limiting-advanced
+  #   consumer: viewer@example.com
+  #   config:
+  #     limit:
+  #       - 3
+  #     window_size:
+  #       - 60
+  - name: acl
+    service: httpbin-service
+    config:
+      allow:
+        - admin
+  - name: request-termination
+    route: httpbin-route
+    config:
+      status_code: 503
+      message: Our website is currently undergoing maintenance.

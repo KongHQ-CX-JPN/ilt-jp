@@ -1,0 +1,53 @@
+_format_version: "3.0"
+
+# Consumer定義
+consumers:
+  - username: admin
+    # JWTプラグインの認証で利用するキーを定義
+    jwt_secrets:
+      - algorithm: HS256
+        key: ${{ env "DECK_KEY" }}
+        secret: ${{ env "DECK_SECRET" }}
+
+# Service定義
+services:
+  - name: httpbin-service
+    host: http-upstream
+    # Request Headerの有無で振る舞いを変えるためにRouteを複数定義
+    routes:
+      - name: httpbin-route
+        paths:
+          - /mock
+        strip_path: true
+      - name: httpbin-route-non-terminate
+        paths:
+          - /mock
+        # "user: b3db2b36aa26"がついたリクエストはこちらのRouteで評価される
+        headers:
+          user:
+            - "b3db2b36aa26"
+        strip_path: true
+
+# アップストリーム定義
+upstreams:
+  - name: http-upstream
+    algorithm: round-robin
+    targets:
+      - target: httpbin.org:80
+        weight: 100
+      - target: httpbun.org:80
+        weight: 100
+      - target: httpbin.shukawam.me:80
+        weight: 100
+
+# プラグイン定義
+plugins:
+  - name: jwt
+    service: httpbin-service
+    config:
+      key_claim_name: key
+  - name: request-termination
+    route: httpbin-route
+    config:
+      status_code: 503
+      message: Our website is currently undergoing maintenance.

@@ -1,0 +1,53 @@
+x-default: &default
+  networks:
+    - kong-network
+  restart: on-failure
+
+networks:
+  kong-network:
+
+services:
+  # --- Kong Gateway(Konnect) ---
+  gateway:
+    <<: *default
+    image: kong/kong-gateway:3.12
+    container_name: gateway
+    ports:
+      - 127.0.0.1:8000:8000
+      - 127.0.0.1:8443:8443
+    environment:
+      KONG_ROLE: data_plane
+      KONG_DATABASE: off
+      KONG_VITALS: off
+      KONG_CLUSTER_MTLS: pki
+      KONG_CLUSTER_CONTROL_PLANE: ${CONTROL_PLANE_ID}.us.cp.konghq.com:443
+      KONG_CLUSTER_SERVER_NAME: ${CONTROL_PLANE_ID}.us.cp.konghq.com
+      KONG_CLUSTER_TELEMETRY_ENDPOINT: ${CONTROL_PLANE_ID}.us.tp.konghq.com:443
+      KONG_CLUSTER_TELEMETRY_SERVER_NAME: ${CONTROL_PLANE_ID}.us.tp.konghq.com
+      KONG_CLUSTER_CERT: /etc/secrets/cluster.crt
+      KONG_CLUSTER_CERT_KEY: /etc/secrets/cluster.key
+      KONG_LUA_SSL_TRUSTED_CERTIFICATE: system
+      KONG_KONNECT_MODE: on
+      KONG_CLUSTER_DP_LABELS: type:docker-macOsArmOS
+      KONG_ROUTER_FLAVOR: expressions
+    volumes:
+      - ./config/kong/cluster-cert:/etc/secrets
+  deck:
+    <<: *default
+    image: kong/deck:v1.49.0
+    working_dir: /files
+    container_name: deck
+    command:
+      [
+        "gateway",
+        "sync",
+        "--konnect-control-plane-name",
+        $CONTROL_PLANE_NAME,
+        "--konnect-token",
+        $PAT,
+        "kong.yaml",
+      ]
+    volumes:
+      - ./config/kong/kong.yaml:/files/kong.yaml
+    depends_on:
+      - gateway

@@ -1,0 +1,28 @@
+_format_version: "3.0"
+
+services:
+  - name: httpbin-service
+    url: https://httpbin.org
+    routes:
+      - name: httpbin-route
+        paths:
+          - /mock
+        strip_path: true
+
+plugins:
+  - name: openid-connect
+    service: httpbin-service
+    config:
+      issuer: http://keycloak:8080/realms/kong/.well-known/openid-configuration
+      # for demo use only(fixed value)
+      client_id:
+        - kong
+      # !!!for demo use only(fixed value)!!!
+      client_secret:
+        - f47ac10b-58cc-4372-a567-0e02b2c3d479
+      client_auth:
+        - client_secret_basic
+      auth_methods:
+        - client_credentials
+      client_credentials_param_type:
+        - header
