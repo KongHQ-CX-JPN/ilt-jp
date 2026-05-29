@@ -1,0 +1,88 @@
+_format_version: "3.0"
+_konnect:
+  control_plane_name: ilt-gateway
+
+consumers:
+  - username: taro.yamada
+    plugins:
+      - name: rate-limiting-advanced
+        config:
+          limit:
+            - 10
+          window_size:
+            - 60
+          window_type: sliding
+          namespace: kong-rla
+  - username: hanako.suzuki
+    plugins:
+      - name: rate-limiting-advanced
+        config:
+          limit:
+            - 20
+          window_size:
+            - 60
+          window_type: sliding
+          namespace: kong-rla
+  - username: ichiro.sato
+    jwt_secrets:
+      - algorithm: HS256
+        key: sample-key
+        secret: sample-secret
+
+services:
+  - name: httpbin-service
+    url: https://httpbin.konghq.com
+    routes:
+      - name: httpbin-route
+        protocols:
+          - http
+          - https
+        paths:
+          - /mock
+        strip_path: true
+      - name: oidc-route
+        protocols:
+          - http
+          - https
+        paths:
+          - /oidc
+        strip_path: true
+        plugins:
+          - name: openid-connect
+            config:
+              issuer: http://localhost:8080/realms/ilt
+              jwks_endpoint: http://keycloak:8080/realms/ilt/protocol/openid-connect/certs
+              auth_methods:
+                - bearer
+              cache_tokens_salt: salt-and-peppar
+              consumer_claims:
+                - [preferred_username]
+      - name: jwt-route
+        protocols:
+          - http
+          - https
+        paths:
+          - /jwt
+        strip_path: true
+        plugins:
+          - name: jwt
+            config:
+              header_names:
+                - authorization
+
+plugins:
+  - name: opentelemetry
+    config:
+      logs_endpoint: http://otel-lgtm:4318/v1/logs
+      access_logs: 
+        endpoint: http://otel-lgtm:4318/v1/logs
+      metrics:
+        endpoint: http://otel-lgtm:4318/v1/metrics
+        push_interval: 5
+        enable_ai_metrics: true
+        enable_bandwidth_metrics: true
+        enable_consumer_attribute: true
+        enable_latency_metrics: true
+        enable_request_metrics: true
+        enable_upstream_health_metrics: true
+      traces_endpoint: http://otel-lgtm:4318/v1/traces

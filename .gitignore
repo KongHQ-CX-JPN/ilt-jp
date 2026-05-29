@@ -1,3 +1,4 @@
 .env
 cluster.crt
 cluster.key
+mise.toml
