@@ -1,0 +1,70 @@
+_format_version: "3.0"
+_konnect:
+  control_plane_name: ilt-gateway
+
+services:
+  - name: sample-api
+    url: http://httpbin.konghq.com/anything
+    routes:
+      - name: sample-api-route
+        paths:
+          - /api
+        strip_path: true
+
+consumers:
+  - username: admin-user
+    keyauth_credentials:
+      - key: admin-api-key
+    acls:
+      - group: Admin
+
+  - username: paid-user
+    keyauth_credentials:
+      - key: paid-api-key
+    acls:
+      - group: Paid
+
+  - username: free-user
+    keyauth_credentials:
+      - key: free-api-key
+    acls:
+      - group: Free
+
+  - username: other-user
+
+plugins:
+  # APIキー認証
+  - name: key-auth
+    service: sample-api
+    config:
+      key_names:
+        - apikey
+      anonymous: other-user
+
+  # Admin / Paid / Free のいずれかに所属するConsumerのみ許可
+  - name: acl
+    service: sample-api
+    config:
+      allow:
+        - Admin
+        - Paid
+        - Free
+
+  # Paid: 100 RPM
+  - name: rate-limiting
+    service: sample-api
+    consumer: paid-user
+    config:
+      minute: 100
+      policy: local
+      limit_by: consumer
+
+
+  # Free: 10 RPM
+  - name: rate-limiting
+    service: sample-api
+    consumer: free-user
+    config:
+      minute: 10
+      policy: local
+      limit_by: consumer
