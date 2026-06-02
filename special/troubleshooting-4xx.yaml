@@ -1,0 +1,24 @@
+_format_version: "3.0"
+
+consumers:
+- username: Jane
+  jwt_secrets:
+  - key: jane-key
+    secret: jane-secret
+    algorithm: HS256
+
+services:
+- host: httpbin.konghq.com
+  name: mockbin
+  path: /anything
+  port: 80
+  protocol: https
+  routes:
+  - name: mockbin
+    paths:
+    - /mockbin
+    protocols:
+    - http
+    - https
+  plugins:
+  - name: jwt
