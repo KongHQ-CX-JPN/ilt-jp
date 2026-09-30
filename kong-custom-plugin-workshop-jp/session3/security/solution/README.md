@@ -37,7 +37,8 @@ http POST :8001/services name=example-service \
 ```shell
 http POST :8001/services/example-service/routes \
     name=example-route \
-    paths:='["/echo"]'
+    paths:='["/echo"]' \
+    protocols:='["http","https"]'
 ```
 
 ## PluginをServiceに追加

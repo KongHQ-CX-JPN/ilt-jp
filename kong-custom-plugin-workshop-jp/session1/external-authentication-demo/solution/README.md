@@ -47,7 +47,7 @@ http POST :8001/services name=example-service url=http://httpbin.org
 ## RouteをServiceに追加
 
 ```shell
-http POST :8001/services/example-service/routes name=example-route paths:='["/echo"]'
+http POST :8001/services/example-service/routes name=example-route paths:='["/echo"]' protocols:='["http","https"]'
 ```
 
 ## MyPluginをServiceに追加

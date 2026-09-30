@@ -19,9 +19,9 @@ docker-compose up -d
 
 ```shell
 $ docker ps 
-CONTAINER ID   IMAGE                        COMMAND               CREATED              STATUS              PORTS                NAMES
-50db1a0d3da8   postgres:13-alpine           "postgres"            About a minute ago   Up About a minute                        kong-database
-dbac4b654807   kong/kong-gateway:3.4.3.12   "kong docker-start"   About a minute ago   Up About a minute   8000/tcp, 8443/tcp   kong
+CONTAINER ID   IMAGE                      COMMAND                   CREATED          STATUS                            PORTS                     NAMES
+06a3232cdde0   kong/kong-gateway:latest   "/entrypoint.sh kong…"   26 seconds ago   Up 2 seconds (health: starting)   0.0.0.0:8000-8002->8000-8002/tcp, [::]:8000-8002->8000-8002/tcp, 0.0.0.0:8004->8004/tcp, [::]:8004->8004/tcp, 8003/tcp, 0.0.0.0:8443-8445->8443-8445/tcp, [::]:8443-8445->8443-8445/tcp, 8446-8447/tcp   kong
+4ba0dfb11a7a   postgres:latest            "docker-entrypoint.s…"   26 seconds ago   Up 25 seconds (healthy)           5432/tcp                    kong-database
 ```
 
 ## Serviceの追加
@@ -33,7 +33,7 @@ http POST :8001/services name=example-service url=http://httpbin.org
 ## ServiceにRouteを追加
 
 ```shell
-http POST :8001/services/example-service/routes name=transform-route paths:='["/transform"]'
+http POST :8001/services/example-service/routes name=transform-route paths:='["/transform"]' protocols:='["http","https"]'
 ```
 
 ## ServiceにPluginを追加
@@ -43,7 +43,7 @@ http -f POST :8001/services/example-service/plugins name=request-transformer con
 ```
 Request Transformer Pluginを有効にし、`accept` ヘッダ、クエリ文字列の `custId`、および本文の `custId` を削除します。
 利用可能な設定値について以下を参照してください。
-https://docs.konghq.com/hub/kong-inc/request-transformer/
+https://developer.konghq.com/plugins/request-transformer/
 
 ## Test
 
@@ -58,14 +58,14 @@ HTTP/1.1 200 OK
 Access-Control-Allow-Credentials: true
 Access-Control-Allow-Origin: *
 Connection: keep-alive
-Content-Length: 588
+Content-Length: 593
 Content-Type: application/json
-Date: Fri, 23 Aug 2024 02:56:53 GMT
+Date: Wed, 30 Sep 2026 04:44:31 GMT
 Server: gunicorn/19.9.0
-Via: kong/3.4.3.12-enterprise-edition
-X-Kong-Proxy-Latency: 1171
-X-Kong-Request-Id: 7c38c95f9d4d0004974b741344ca6d39
-X-Kong-Upstream-Latency: 528
+Via: 1.1 kong/3.14.0.6-enterprise-edition
+X-Kong-Proxy-Latency: 56
+X-Kong-Request-Id: abf94a08bb3e00125651120b73456e32
+X-Kong-Upstream-Latency: 345
 
 {
     "args": {
@@ -75,18 +75,18 @@ X-Kong-Upstream-Latency: 528
     "files": {},
     "form": {},
     "headers": {
-        "Accept-Encoding": "gzip, deflate",
+        "Accept-Encoding": "gzip, deflate, zstd",
         "Host": "httpbin.org",
-        "User-Agent": "HTTPie/3.2.2",
-        "X-Amzn-Trace-Id": "Root=1-66c7fa75-0b325b526e7df97a5fc47ead",
+        "User-Agent": "HTTPie/3.2.4",
+        "X-Amzn-Trace-Id": "Root=1-6abc93af-5f77d6dc6317d9cd7aa776cf",
         "X-Forwarded-Host": "localhost",
         "X-Forwarded-Path": "/transform/anything",
         "X-Forwarded-Prefix": "/transform",
-        "X-Kong-Request-Id": "7c38c95f9d4d0004974b741344ca6d39"
+        "X-Kong-Request-Id": "abf94a08bb3e00125651120b73456e32"
     },
     "json": null,
     "method": "GET",
-    "origin": "192.168.127.1, 214.215.6.147",
+    "origin": "192.168.64.1, 224.215.116.147",
     "url": "http://localhost/anything?a=100"
 }
 ```
