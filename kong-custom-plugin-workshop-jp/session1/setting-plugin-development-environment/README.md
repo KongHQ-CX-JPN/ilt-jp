@@ -70,10 +70,10 @@ pongo run --no-cassandra
 # Kongの特定のバージョンを指定し、
 # -vと-o gtestは以下のような形でbustedの引数を渡す
 # 'bin/busted --helper=/pongo/busted_helper.lua -v -o # gtest /kong-plugin/spec'
-KONG_VERSION=3.4.0 pongo run -v -o gtest ./spec
+KONG_VERSION=3.9.0 pongo run -v -o gtest ./spec
 
 # .x'を使ってKongリリースの最新パッチバージョンに対して実行する。
-KONG_VERSION=3.4.x pongo run -v -o gtest ./spec
+KONG_VERSION=3.14.0.x pongo run -v -o gtest ./spec
 ```
 
 上記のコマンド（`pongo run`）は自動的にテストイメージをビルドし、テスト環境を起動します。終了したら、テスト環境は次のようにして取り壊すことができます。
@@ -142,16 +142,17 @@ Pongo では、テストに使う依存関係のセットを使うことがで�
     pongo shell
 
     # httpbin (http)に認証付きでアクセス
-    http --proxy=http:http://kong:king@squid:3128 --proxy=https:http://kong:king@squid:3128 http://httpbin.org/anything
+    curl -x http://kong:king@squid:3128 http://httpbin.org/anything
+
 
     # httpsも同様
-    http --proxy=http:http://kong:king@squid:3128 --proxy=https:http://kong:king@squid:3128 https://httpbin.org/anything
+    curl -x http://kong:king@squid:3128 https://httpbin.org/anything
 
     # 認証なしでホワイトリストにある mockbin.org (http)にアクセス
-    http --proxy=http:http://squid:3128 --proxy=https:http://squid:3128 http://mockbin.org/request
+    curl -x http://squid:3128 http://mockbin.org/request
 
     # httpsも同様
-    http --proxy=http:http://squid:3128 --proxy=https:http://squid:3128 https://mockbin.org/request
+    curl -x http://squid:3128 https://mockbin.org/request
     ```
 
 ### 依存関係のデフォルト値の設定
