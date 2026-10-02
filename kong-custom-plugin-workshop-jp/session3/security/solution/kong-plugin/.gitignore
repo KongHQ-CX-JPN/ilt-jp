@@ -5,3 +5,7 @@ servroot
 *.rock
 # exclude Pongo shell history
 .pongo/.ash_history
+.pongo/.bash_history
+
+# kong-pongo is a cloned tool, not part of this repo
+kong-pongo/
