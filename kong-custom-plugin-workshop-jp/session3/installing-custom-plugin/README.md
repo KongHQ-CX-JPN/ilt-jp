@@ -18,9 +18,9 @@ docker-compose up -d
 
 ```shell
 $ docker ps
-CONTAINER ID   IMAGE                               COMMAND                  CREATED         STATUS                   PORTS                                                                                                                                                                                              NAMES
-680b20c55ea8   kong/kong-gateway:3.4.3.12-ubuntu   "/entrypoint.sh kong…"   5 minutes ago   Up 5 minutes (healthy)   0.0.0.0:8000-8002->8000-8002/tcp, :::8000-8002->8000-8002/tcp, 0.0.0.0:8004->8004/tcp, :::8004->8004/tcp, 8003/tcp, 0.0.0.0:8443-8445->8443-8445/tcp, :::8443-8445->8443-8445/tcp, 8446-8447/tcp   kong
-f2ff01297cc0   postgres:15-alpine                  "docker-entrypoint.s…"   5 minutes ago   Up 5 minutes (healthy)   5432/tcp                                                                                                                                                                                           kong-database
+CONTAINER ID   IMAGE                      COMMAND                   CREATED          STATUS                    PORTS                                                                                                                            NAMES
+0707b6f3eace   kong/kong-gateway:latest   "/entrypoint.sh kong…"   52 seconds ago   Up 28 seconds (healthy)   0.0.0.0:8000-8002->8000-8002/tcp, [::]:8000-8002->8000-8002/tcp, 8003-8004/tcp, 0.0.0.0:8443-8445->8443-8445/tcp, [::]:8443-8445->8443-8445/tcp, 8446-8447/tcp   kong
+8cd0ee91001d   postgres:latest            "docker-entrypoint.s…"   53 seconds ago   Up 52 seconds (healthy)   5432/tcp                                                                                                                           kong-database
 ```
 
 ## Serviceの追加
@@ -63,14 +63,14 @@ Access-Control-Allow-Credentials: true
 Access-Control-Allow-Origin: *
 Bye-World: this is on the response
 Connection: keep-alive
-Content-Length: 555
+Content-Length: 557
 Content-Type: application/json
-Date: Thu, 19 Sep 2024 04:36:33 GMT
+Date: Mon, 05 Oct 2026 00:17:25 GMT
 Server: gunicorn/19.9.0
-Via: kong/3.4.3.12-enterprise-edition
-X-Kong-Proxy-Latency: 25
-X-Kong-Request-Id: 161e771d46e5335c42d881146ba65248
-X-Kong-Upstream-Latency: 422
+Via: 1.1 kong/3.14.0.6-enterprise-edition
+X-Kong-Proxy-Latency: 168
+X-Kong-Request-Id: e2b0e3716a34bf638a1ca6628735a75b
+X-Kong-Upstream-Latency: 364
 
 {
   "args": {},

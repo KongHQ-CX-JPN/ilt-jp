@@ -2,7 +2,7 @@
 
 
 ```shell
-    cd kong-plugin
+cd kong-plugin
 ```
 
 ### Pongoの起動
