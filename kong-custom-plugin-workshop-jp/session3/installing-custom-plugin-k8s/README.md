@@ -2,8 +2,6 @@
 
 このラボは、Kubernetes上にKong公式Helmチャート(`kong/kong`)でData Planeがすでにインストールされている環境を前提に、カスタムプラグインのLuaコードをそのDPのPodに追加する方法を扱います。
 
-Hybrid構成ではConfig（Service/Route/Pluginの設定）はControl Plane側（セルフホストのCPやKonnect）から同期されるため、「どのServiceにmypluginを適用するか」はこのラボのスコープ外です。ここで扱うのはあくまで、**DPのコンテナにmypluginのLuaファイル（`handler.lua`/`schema.lua`）をどう持ち込むか**という点のみです。
-
 DBモード・dblessモードではコンテナにボリュームマウントしていましたが、Helmインストールされた環境では、プラグインのコードを`ConfigMap`としてクラスタに登録し、`values.yaml`経由でDPのPodにマウントします。マウント後の`KONG_PLUGINS`環境変数への追加は、Helmチャートが自動で行います。
 
 ### 前提条件
