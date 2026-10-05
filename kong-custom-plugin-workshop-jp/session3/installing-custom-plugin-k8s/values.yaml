@@ -1,0 +1,4 @@
+plugins:
+  configMaps:
+  - pluginName: myplugin
+    name: kong-plugin-myplugin

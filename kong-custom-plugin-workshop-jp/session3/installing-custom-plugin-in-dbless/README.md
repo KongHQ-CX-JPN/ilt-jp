@@ -73,7 +73,7 @@ docker-compose up -d
 $ docker ps
 
 CONTAINER ID   IMAGE                               COMMAND                  CREATED         STATUS                   PORTS                                                                                                                                                        NAMES
-2e22be0bfccb   kong/kong-gateway:3.4.3.12-ubuntu   "/entrypoint.sh kong…"   3 seconds ago   Up 2 seconds (healthy)   0.0.0.0:8000-8002->8000-8002/tcp, :::8000-8002->8000-8002/tcp, 8003-8004/tcp, 0.0.0.0:8443-8445->8443-8445/tcp, :::8443-8445->8443-8445/tcp, 8446-8447/tcp   kong
+ccc82df60e82   kong/kong-gateway:latest   "/entrypoint.sh kong…"   33 seconds ago   Up 32 seconds (healthy)   0.0.0.0:8000-8002->8000-8002/tcp, [::]:8000-8002->8000-8002/tcp, 8003-8004/tcp, 0.0.0.0:8443-8445->8443-8445/tcp, [::]:8443-8445->8443-8445/tcp, 8446-8447/tcp   kong
 
 
 ```

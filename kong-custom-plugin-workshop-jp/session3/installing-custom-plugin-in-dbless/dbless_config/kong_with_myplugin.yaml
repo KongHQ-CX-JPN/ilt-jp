@@ -12,5 +12,7 @@ services:
        - accept-encoding
   routes:
   - name: example.route
+    protocols:
+    - http
     paths:
     - /echo

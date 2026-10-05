@@ -6,5 +6,7 @@ services:
   url: http://httpbin.org
   routes:
   - name: example.route
+    protocols:
+    - http
     paths:
     - /echo
